@@ -1,0 +1,38 @@
+services:
+  pg:
+    image: postgis/postgis
+    environment:
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - pgnetwork
+
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - pg
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@domain.com
+      PGADMIN_DEFAULT_PASSWORD: pgadminpassword
+    ports:
+      - 8080:80
+    networks:
+      - pgnetwork
+
+  osm2pgsql:
+    image: osm2pgsql:alpine
+    environment:
+      - name=value
+    depends_on:
+      - pg
+      - pgadmin
+    networks:
+      - pgnetwork
+
+volumes:
+  pg_data:
+
+
+networks:
+  pgnetwork:
