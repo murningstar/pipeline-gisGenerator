@@ -29,6 +29,8 @@ services:
       - pgadmin
     networks:
       - pgnetwork
+    volumes:
+      - ./PUT-YOUR-DATASET-HERE:/mnt/dataset
 
 volumes:
   pg_data:
