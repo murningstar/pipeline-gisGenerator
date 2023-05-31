@@ -6,7 +6,9 @@ WORKDIR /osm2pgsql
 
 # necessary packages for osm2pgsql + git
 RUN apk --update-cache add cmake make g++ boost-dev expat-dev \
-      bzip2-dev zlib-dev libpq proj-dev lua5.3-dev postgresql-dev git
+      bzip2-dev zlib-dev libpq proj-dev lua5.3-dev postgresql-dev
+RUN apk --update-cache add git
+RUN apk --update-cache add bash
 
 # Clone the osm2pgsql repository
 RUN git clone https://github.com/openstreetmap/osm2pgsql.git .
@@ -18,4 +20,5 @@ RUN mkdir build && cd build && \
     make install
 
 # Set the entrypoint
-# ENTRYPOINT ["osm2pgsql"]
+COPY osm2pgsql_startup.sh /osm2pgsql/osm2pgsql_startup.sh
+ENTRYPOINT ["/bin/bash", "/osm2pgsql/osm2pgsql_startup.sh"]

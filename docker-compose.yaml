@@ -1,6 +1,6 @@
 services:
-  pg:
-    image: postgis/postgis
+  postgis:
+    image: postgismod
     environment:
       POSTGRES_PASSWORD: mypassword
     volumes:
@@ -11,7 +11,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     depends_on:
-      - pg
+      - postgis
     environment:
       PGADMIN_DEFAULT_EMAIL: user@domain.com
       PGADMIN_DEFAULT_PASSWORD: pgadminpassword
@@ -21,11 +21,11 @@ services:
       - pgnetwork
 
   osm2pgsql:
-    image: osm2pgsql:alpine
+    image: osm2pgsqlmod
     environment:
       - name=value
     depends_on:
-      - pg
+      - postgis
       - pgadmin
     networks:
       - pgnetwork
