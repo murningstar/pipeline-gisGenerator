@@ -1,0 +1,37 @@
+{
+  storeId: 4,
+  featureObj: {
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [ 3700150.462071567, 5967294.184972812 ]
+    },
+    properties: {}
+  },
+  receipt: [
+    {
+      name: 'Зубная паста Colgate',
+      category: 'Средства личной гигиены',
+      company: 'Colgate-Palmolive',
+      price: 100
+    },
+    {
+      name: 'Хлебцы ржаные',
+      category: 'Зерновые и хлебобулочные изделия',
+      company: 'Хлебный дом',
+      price: 50
+    },
+    {
+      name: 'Ряженка',
+      category: 'Молочные продукты',
+      company: 'Петмол',
+      price: 80
+    },
+    {
+      name: 'Белизна',
+      category: 'Средства для стирки',
+      company: 'Санклин',
+      price: 50
+    }
+  ]
+}

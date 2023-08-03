@@ -1,6 +1,8 @@
 services:
   postgis:
-    image: postgismod
+    image: postgis
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: mypassword
     volumes:
@@ -8,37 +10,46 @@ services:
     networks:
       - pgnetwork
 
-  martin:
-    image: ghcr.io/maplibre/martin
-    restart: unless-stopped
+  generator:
+    image: generator
     ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_URL=postgresql://postgres:mypassword@postgis/osm
-    depends_on:
-      - postgis
+      - 7373:7373
     networks:
       - pgnetwork
+      - pipelinenetwork
+    depends_on:
+      - postgis
+  # martin:
+  #   image: ghcr.io/maplibre/martin
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - DATABASE_URL=postgresql://postgres:mypassword@postgis/osm
+  #   depends_on:
+  #     - postgis
+  #   networks:
+  #     - pgnetwork
 
-  pgadmin:
-    image: dpage/pgadmin4
-    depends_on:
-      - postgis
-    environment:
-      PGADMIN_DEFAULT_EMAIL: user@domain.com
-      PGADMIN_DEFAULT_PASSWORD: pgadminpassword
-    ports:
-      - 8080:80
-    networks:
-      - pgnetwork
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   depends_on:
+  #     - postgis
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: user@domain.com
+  #     PGADMIN_DEFAULT_PASSWORD: pgadminpassword
+  #   ports:
+  #     - 8080:80
+  #   networks:
+  #     - pgnetwork
 
   osm2pgsql:
-    image: osm2pgsqlmod
+    image: osm2pgsql
     environment:
       - name=value
     depends_on:
       - postgis
-      - pgadmin
+      # - pgadmin
     networks:
       - pgnetwork
     volumes:
@@ -50,3 +61,5 @@ volumes:
 
 networks:
   pgnetwork:
+  pipelinenetwork:
+    external: true
