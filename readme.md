@@ -44,4 +44,4 @@ My personal recomendation for usage within Docker desktop is picking **dataset 3
 5432 - postgis
 8080 - pgadmin
 3000 - martin
-7373 - generator
+7331 - generator

@@ -13,7 +13,7 @@ services:
   generator:
     image: generator
     ports:
-      - 7373:7373
+      - 7331:7331
     networks:
       - pgnetwork
       - pipelinenetwork
@@ -43,17 +43,17 @@ services:
   #   networks:
   #     - pgnetwork
 
-  osm2pgsql:
-    image: osm2pgsql
-    environment:
-      - name=value
-    depends_on:
-      - postgis
-      # - pgadmin
-    networks:
-      - pgnetwork
-    volumes:
-      - ./PUT-YOUR-DATASET-HERE:/mnt/dataset
+  # osm2pgsql:
+  #   image: osm2pgsql
+  #   environment:
+  #     - name=value
+  #   depends_on:
+  #     - postgis
+  #     # - pgadmin
+  #   networks:
+  #     - pgnetwork
+  #   volumes:
+  #     - ./PUT-YOUR-DATASET-HERE:/mnt/dataset
 
 volumes:
   pg_data:

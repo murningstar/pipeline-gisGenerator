@@ -9,6 +9,6 @@ RUN npm install
 COPY src/index.js .
 COPY src/range.json .
 
-EXPOSE 7373
+EXPOSE 7331
 
 CMD ["node", "index.js"]

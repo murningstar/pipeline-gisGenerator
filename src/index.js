@@ -4,6 +4,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 //nodejs
 import fsAsync from "fs/promises";
+import { createServer } from "http";
 import path from "path";
 import url from "url";
 // libs
@@ -18,7 +19,6 @@ function sleep(ms) {
 function getRandomInt(max) {
     return random.int(1, max);
 }
-
 const socket = io("http://proxy:3773");
 socket.on("connect", () => {
     console.log("Connected to proxy!");
@@ -44,7 +44,7 @@ const { minlat, minlon, maxlat, maxlon } = bboxQuery.rows[0];
 
 const bbox = [minlon, minlat, maxlon, maxlat];
 
-/* 10000 геоточек магазинов */
+/* 5 (геоточек) магазинов */
 const randomGeoPoints = randomGeojson.point(5, bbox);
 // console.dir(randomGeoPoints.features[0], { depth: null });
 
@@ -83,7 +83,7 @@ const retailStores = [];
 randomGeoPoints.features.forEach((value, i) => {
     const storeId = i + 1;
     retailStores.push({
-        storeId: storeId,
+        storeId: `${storeId}`,
         name: `Bessoli-RetailStore-${storeId}`,
         featureObj: value,
         range: combinedRange,
@@ -91,11 +91,11 @@ randomGeoPoints.features.forEach((value, i) => {
             const receipt = generateRandomReceipt();
             await sleep(random.int(receipt.length, receipt.length * 5) * 1000);
             socket.emit("sale", {
-                storeId: toString(this.storeId),
+                storeId: `${this.storeId}`,
                 featureObj: this.featureObj,
                 receipt: receipt,
             });
-            this.startSellings();
+            this.startSellings(); //рекурсия
         },
     });
 });
@@ -104,7 +104,32 @@ function startAll() {
     retailStores.forEach((storeObj) => storeObj.startSellings());
     console.log("started selling");
 }
-startAll();
+
+const app = express();
+const server = createServer(app);
+app.use(
+    cors({
+        origin: "*",
+    })
+);
+app.use(bodyParser.json());
+app.get("/stores", (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.send(JSON.stringify(retailStores));
+    res.end();
+});
+const PORT = 7331;
+server.listen(PORT, () => {
+    console.log(`App started on port ${PORT}`);
+    socket.connect();
+    startAll();
+});
+server.on("close", () => {
+    socket.disconnect();
+});
+pgPool.end();
 
 // setInterval(() => {
 //     console.log("### TOTAL SALES: ", salesCounter);
@@ -119,6 +144,3 @@ startAll();
 // app.listen(PORT, () => {
 //      console.log(`App listening at http://localhost:${PORT}`);
 // });
-
-pgPool.end();
-// socket.disconnect();
