@@ -130,17 +130,3 @@ server.on("close", () => {
     socket.disconnect();
 });
 pgPool.end();
-
-// setInterval(() => {
-//     console.log("### TOTAL SALES: ", salesCounter);
-//     console.log("### TOTAL PRODUCTS: ", soldProductsCounter);
-// }, 5000);
-
-// const app = express();
-// app.use(express.json());
-// app.use(cors());
-// app.use(bodyParser.json());
-// const PORT = 7351;
-// app.listen(PORT, () => {
-//      console.log(`App listening at http://localhost:${PORT}`);
-// });
