@@ -11,8 +11,7 @@ services:
       - pgnetwork
 
   generator:
-    # image: michaelmorningstar/generator:latest
-    image: generator
+    image: michaelmorningstar/generator:latest
     ports:
       - 7331:7331
     networks:
