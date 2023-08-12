@@ -11,6 +11,7 @@ services:
       - pgnetwork
 
   generator:
+    # image: michaelmorningstar/generator:latest
     image: generator
     ports:
       - 7331:7331
@@ -19,6 +20,9 @@ services:
       - pipelinenetwork
     depends_on:
       - postgis
+    environment:
+      - STORES_NUMBER=50
+
   # martin:
   #   image: ghcr.io/maplibre/martin
   #   restart: unless-stopped

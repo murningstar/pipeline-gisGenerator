@@ -11,4 +11,4 @@ COPY src/range.json .
 
 EXPOSE 7331
 
-CMD ["node", "index.js"]
+CMD ["node", "index.js", "--stores", "5"]

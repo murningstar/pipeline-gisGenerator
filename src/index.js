@@ -8,10 +8,24 @@ import { createServer } from "http";
 import path from "path";
 import url from "url";
 // libs
+import yargs from "yargs/yargs";
+import {hideBin} from "yargs/helpers"
 import randomGeojson, { position } from "geojson-random";
 import pg from "pg";
 import random from "random";
 import { io } from "socket.io-client";
+
+const argv = yargs(hideBin(process.argv))
+    .option("stores", {
+        alias: "number",
+        type: "number",
+        description: "Number of stores that will generate data",
+    })
+    .help().argv;
+const storesNumber = process.env.STORES_NUMBER
+    ? process.env.STORES_NUMBER
+    : argv.stores;
+console.log('Number of working stores: ', storesNumber);
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -19,6 +33,7 @@ function sleep(ms) {
 function getRandomInt(max) {
     return random.int(1, max);
 }
+
 const socket = io("http://proxy:3773");
 socket.on("connect", () => {
     console.log("Connected to proxy!");
@@ -44,8 +59,8 @@ const { minlat, minlon, maxlat, maxlon } = bboxQuery.rows[0];
 
 const bbox = [minlon, minlat, maxlon, maxlat];
 
-/* 5 (геоточек) магазинов */
-const randomGeoPoints = randomGeojson.point(5, bbox);
+/* Количество геоточек (и соотв.) магазинов */
+const randomGeoPoints = randomGeojson.point(storesNumber, bbox);
 // console.dir(randomGeoPoints.features[0], { depth: null });
 
 const jsonRange = JSON.parse(
